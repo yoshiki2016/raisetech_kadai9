@@ -5,4 +5,5 @@ import java.util.Optional;
 
 public interface NameService {
     List<Name> findAll();
+    Name findName(int id);
 }
