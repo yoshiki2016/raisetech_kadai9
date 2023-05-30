@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface MovieService {
     List<Movie> findAll();
-    List<Movie> findMovie(int published_year);
+    List<Movie> findMovie(int publishedYear);
 }

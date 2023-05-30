@@ -21,8 +21,8 @@ public class MovieController {
     }
 
     @GetMapping("/movies")
-    public List<Movie> findMovie(@RequestParam("published_year") int published_year){
-        return movieService.findMovie(published_year);
+    public List<Movie> findMovie(@RequestParam("published_year") int publishedYear){
+        return movieService.findMovie(publishedYear);
     }
 
 }
