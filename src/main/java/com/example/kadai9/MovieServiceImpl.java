@@ -14,18 +14,11 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public List<Movie> findAll() {
-        return movieMapper.findAll();
+    public List<Movie> findMovies(Integer publishedYear){
+        if(publishedYear == null){
+            return movieMapper.findAll();
+        } else {
+            return movieMapper.findMovies(publishedYear);
+        }
     }
-
-    @Override
-    public List<Movie> findMovies(int publishedYear){
-        return movieMapper.findMovies(publishedYear);
-    }
-
-    @Override
-    public List<Movie> searchMovies(Optional<Integer> publishedYear){
-        return publishedYear.isPresent() ? findMovies(publishedYear.get()) : findAll();
-    }
-
 }
