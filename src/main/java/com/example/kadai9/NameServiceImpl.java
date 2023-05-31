@@ -17,4 +17,9 @@ public class NameServiceImpl implements NameService{
     public List<Name> findAll() {
         return nameMapper.findAll();
     }
+
+    @Override
+    public Name findName(int id) {
+        return nameMapper.findName(id);
+    }
 }
