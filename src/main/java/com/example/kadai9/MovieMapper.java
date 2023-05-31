@@ -12,4 +12,7 @@ public interface MovieMapper {
 
     @Select("SELECT * FROM movies WHERE published_year = #{publishedYear}")
     List<Movie> findMovies(int publishedYear);
+
+    @Select("DELETE FROM movies WHERE id = #{id}")
+    void deleteMovies(int id);
 }

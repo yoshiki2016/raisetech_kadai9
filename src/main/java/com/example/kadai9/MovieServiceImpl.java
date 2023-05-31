@@ -21,4 +21,9 @@ public class MovieServiceImpl implements MovieService{
             return movieMapper.findMovies(publishedYear);
         }
     }
+
+    @Override
+    public void deleteMovies(int id){
+        movieMapper.deleteMovies(id);
+    };
 }
