@@ -8,10 +8,10 @@
         SELECT * FROM movies WHERE published_year = #{publishedYear}
     </select>
     <insert id="createMovie" parameterType="com.example.kadai9.Movie" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO movies (movie_name, published_year) VALUES (#{movieName}, #{publishedYear});
+        INSERT INTO movies (movie_title, published_year) VALUES (#{movieTitle}, #{publishedYear});
     </insert>
     <update id="updateMovie" parameterType="com.example.kadai9.Movie">
-        UPDATE movies SET movie_name = #{movieName}, published_year = #{publishedYear} Where id = #{id};
+        UPDATE movies SET movie_title = #{movieTitle}, published_year = #{publishedYear} Where id = #{id};
     </update>
 </mapper>
 

@@ -2,12 +2,12 @@ package com.example.kadai9;
 
 public class Movie {
     private int id;
-    private String movieName;
+    private String movieTitle;
     private int publishedYear;
 
-    public Movie(int id, String movieName, int publishedYear) {
+    public Movie(int id, String movieTitle, int publishedYear) {
         this.id = id;
-        this.movieName = movieName;
+        this.movieTitle = movieTitle;
         this.publishedYear = publishedYear;
     }
 
@@ -15,8 +15,8 @@ public class Movie {
         return id;
     }
 
-    public String getMovieName() {
-        return movieName;
+    public String getmovieTitle() {
+        return movieTitle;
     }
 
     public int getPublishedYear() {
