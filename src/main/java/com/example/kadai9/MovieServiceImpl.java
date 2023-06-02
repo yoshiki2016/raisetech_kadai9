@@ -35,7 +35,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public void deleteMovies(int id){
-        movieMapper.deleteMovies(id);
+    public void deleteMovie(int id){
+        movieMapper.deleteMovie(id);
     };
 }
