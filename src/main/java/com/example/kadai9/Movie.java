@@ -22,16 +22,4 @@ public class Movie {
     public int getPublishedYear() {
         return publishedYear;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
-    }
-
-    public void setPublishedYear(int publishedYear) {
-        this.publishedYear = publishedYear;
-    }
 }
