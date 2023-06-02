@@ -42,8 +42,8 @@ public class MovieController {
     }
     // 削除メソッド作成
     @DeleteMapping("/movies/{id}")
-    public ResponseEntity<Map<String, String>> deleteMovies(@PathVariable("id") int id) {
-        movieService.deleteMovies(id);
+    public ResponseEntity<Map<String, String>> deleteMovie(@PathVariable("id") int id) {
+        movieService.deleteMovie(id);
         return ResponseEntity.ok(Map.of("message", "the movie successfully deleted"));
     }
 }

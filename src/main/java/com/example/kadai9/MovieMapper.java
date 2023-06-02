@@ -17,5 +17,5 @@ public interface MovieMapper {
     void updateMovie(Movie movie);
 
 
-    void deleteMovies(int id);
+    void deleteMovie(int id);
 }

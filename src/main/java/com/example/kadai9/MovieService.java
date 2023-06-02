@@ -7,5 +7,5 @@ public interface MovieService {
     List<Movie> findMovies(Integer publishedYear);
     Movie createMovie(CreateMovieForm createMovieForm);
     void updateMovie(Movie movie);
-    void deleteMovies(int id);
+    void deleteMovie(int id);
 }
