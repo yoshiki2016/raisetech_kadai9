@@ -10,5 +10,8 @@
     <insert id="createMovies" parameterType="com.example.kadai9.Movie" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO movies (movie_name, published_year) VALUES (#{movieName}, #{publishedYear});
     </insert>
+    <update id="updateMovies" parameterType="com.example.kadai9.Movie">
+        UPDATE movies SET movie_name = #{movieName}, published_year = #{publishedYear} Where id = #{id};
+    </update>
 </mapper>
 

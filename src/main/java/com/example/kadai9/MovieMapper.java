@@ -14,6 +14,8 @@ public interface MovieMapper {
 
     void createMovies(Movie movie);
 
+    void updateMovies(Movie movie);
+
     @Delete("DELETE FROM movies WHERE id = #{id}")
     void deleteMovies(int id);
 }

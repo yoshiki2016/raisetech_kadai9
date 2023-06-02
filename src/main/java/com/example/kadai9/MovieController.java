@@ -29,6 +29,11 @@ public class MovieController {
         return ResponseEntity.ok(Map.of("message", "the movie successfully created"));
     }
 
+    @PatchMapping("/movies")
+    public ResponseEntity<Map<String, String>> updateMovies(@RequestBody Movie movie) {
+        movieService.updateMovies(movie);
+        return ResponseEntity.ok(Map.of("message", "the movie successfully updated"));
+    }
     // 削除メソッド作成
     @DeleteMapping("/movies/{id}")
     public ResponseEntity<Map<String, String>> deleteMovies(@PathVariable("id") int id) {
