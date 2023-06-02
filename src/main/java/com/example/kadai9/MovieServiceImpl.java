@@ -23,13 +23,13 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public void createMovies(Movie movie){
-        movieMapper.createMovies(movie);
+    public void createMovie(Movie movie){
+        movieMapper.createMovie(movie);
     }
 
     @Override
-    public void updateMovies(Movie movie){
-        movieMapper.updateMovies(movie);
+    public void updateMovie(Movie movie){
+        movieMapper.updateMovie(movie);
     }
 
     @Override

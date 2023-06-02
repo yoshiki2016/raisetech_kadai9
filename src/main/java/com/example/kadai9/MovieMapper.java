@@ -12,9 +12,9 @@ public interface MovieMapper {
 
     List<Movie> findMovies(int publishedYear);
 
-    void createMovies(Movie movie);
+    void createMovie(Movie movie);
 
-    void updateMovies(Movie movie);
+    void updateMovie(Movie movie);
 
     @Delete("DELETE FROM movies WHERE id = #{id}")
     void deleteMovies(int id);

@@ -24,14 +24,14 @@ public class MovieController {
     }
 
     @PostMapping("/movies")
-    public ResponseEntity<Map<String, String>> createMovies(@RequestBody Movie movie) {
-        movieService.createMovies(movie);
+    public ResponseEntity<Map<String, String>> createMovie(@RequestBody Movie movie) {
+        movieService.createMovie(movie);
         return ResponseEntity.ok(Map.of("message", "the movie successfully created"));
     }
 
     @PatchMapping("/movies")
-    public ResponseEntity<Map<String, String>> updateMovies(@RequestBody Movie movie) {
-        movieService.updateMovies(movie);
+    public ResponseEntity<Map<String, String>> updateMovie(@RequestBody Movie movie) {
+        movieService.updateMovie(movie);
         return ResponseEntity.ok(Map.of("message", "the movie successfully updated"));
     }
     // 削除メソッド作成

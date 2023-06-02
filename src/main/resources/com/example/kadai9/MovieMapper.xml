@@ -7,10 +7,10 @@
     <select id="findMovies" parameterType="int" resultType="com.example.kadai9.Movie">
         SELECT * FROM movies WHERE published_year = #{publishedYear}
     </select>
-    <insert id="createMovies" parameterType="com.example.kadai9.Movie" useGeneratedKeys="true" keyProperty="id">
+    <insert id="createMovie" parameterType="com.example.kadai9.Movie" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO movies (movie_name, published_year) VALUES (#{movieName}, #{publishedYear});
     </insert>
-    <update id="updateMovies" parameterType="com.example.kadai9.Movie">
+    <update id="updateMovie" parameterType="com.example.kadai9.Movie">
         UPDATE movies SET movie_name = #{movieName}, published_year = #{publishedYear} Where id = #{id};
     </update>
 </mapper>
