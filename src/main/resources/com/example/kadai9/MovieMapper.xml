@@ -13,5 +13,8 @@
     <update id="updateMovie" parameterType="com.example.kadai9.Movie">
         UPDATE movies SET movie_title = #{movieTitle}, published_year = #{publishedYear} Where id = #{id};
     </update>
+    <delete id="deleteMovies" parameterType="int">
+        DELETE FROM movies WHERE id = #{id}
+    </delete>
 </mapper>
 
