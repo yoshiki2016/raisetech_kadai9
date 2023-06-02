@@ -1,12 +1,14 @@
 package com.example.kadai9;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.swing.text.html.Option;
+import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -17,8 +19,31 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    // 検索メソッド作成
     @GetMapping("/movies")
     public List<Movie> findMovies(@RequestParam(name = "published_year", required = false) Integer publishedYear){
         return movieService.findMovies(publishedYear);
+    }
+
+    @PostMapping("/movies")
+    public ResponseEntity<Map<String, String>> createMovie(@RequestBody CreateMovieForm createMovieForm, UriComponentsBuilder uriBuilder) {
+        Movie movie = movieService.createMovie(createMovieForm);
+        URI url = uriBuilder
+                .path("/movies/" + movie.getId())
+                .build()
+                .toUri();
+        return ResponseEntity.created(url).body(Map.of("message", "the movie successfully created"));
+    }
+
+    @PatchMapping("/movies")
+    public ResponseEntity<Map<String, String>> updateMovie(@RequestBody Movie movie) {
+        movieService.updateMovie(movie);
+        return ResponseEntity.ok(Map.of("message", "the movie successfully updated"));
+    }
+    // 削除メソッド作成
+    @DeleteMapping("/movies/{id}")
+    public ResponseEntity<Map<String, String>> deleteMovies(@PathVariable("id") int id) {
+        movieService.deleteMovies(id);
+        return ResponseEntity.ok(Map.of("message", "the movie successfully deleted"));
     }
 }

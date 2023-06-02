@@ -21,4 +21,21 @@ public class MovieServiceImpl implements MovieService{
             return movieMapper.findMovies(publishedYear);
         }
     }
+
+    @Override
+    public Movie createMovie(CreateMovieForm createMovieForm){
+        Movie movie = new Movie(createMovieForm.getId(), createMovieForm.getMovieTitle(), createMovieForm.getPublishedYear());
+        movieMapper.createMovie(movie);
+        return movie;
+    }
+
+    @Override
+    public void updateMovie(Movie movie){
+        movieMapper.updateMovie(movie);
+    }
+
+    @Override
+    public void deleteMovies(int id){
+        movieMapper.deleteMovies(id);
+    };
 }
