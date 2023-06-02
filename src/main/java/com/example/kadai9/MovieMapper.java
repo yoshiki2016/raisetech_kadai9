@@ -12,6 +12,8 @@ public interface MovieMapper {
 
     List<Movie> findMovies(int publishedYear);
 
+    void createMovies(Movie movie);
+
     @Delete("DELETE FROM movies WHERE id = #{id}")
     void deleteMovies(int id);
 }

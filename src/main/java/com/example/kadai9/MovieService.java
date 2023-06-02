@@ -5,5 +5,6 @@ import java.util.Optional;
 
 public interface MovieService {
     List<Movie> findMovies(Integer publishedYear);
+    void createMovies(Movie movie);
     void deleteMovies(int id);
 }

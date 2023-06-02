@@ -1,6 +1,7 @@
 package com.example.kadai9;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
@@ -22,10 +23,16 @@ public class MovieController {
         return movieService.findMovies(publishedYear);
     }
 
+    @PostMapping("/movies")
+    public ResponseEntity<Map<String, String>> createMovies(@RequestBody Movie movie) {
+        movieService.createMovies(movie);
+        return ResponseEntity.ok(Map.of("message", "the movie successfully created"));
+    }
+
     // 削除メソッド作成
     @DeleteMapping("/movies/{id}")
     public ResponseEntity<Map<String, String>> deleteMovies(@PathVariable("id") int id) {
         movieService.deleteMovies(id);
-        return ResponseEntity.ok(Map.of("message", "the movie successfully delete"));
+        return ResponseEntity.ok(Map.of("message", "the movie successfully deleted"));
     }
 }
