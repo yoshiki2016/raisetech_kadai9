@@ -1,6 +1,5 @@
 package com.example.kadai9;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
