@@ -11,11 +11,16 @@ public class Movie {
         this.publishedYear = publishedYear;
     }
 
+    public Movie(String movieTitle, int publishedYear) {
+        this.movieTitle = movieTitle;
+        this.publishedYear = publishedYear;
+    }
+
     public int getId() {
         return id;
     }
 
-    public String getmovieTitle() {
+    public String getMovieTitle() {
         return movieTitle;
     }
 

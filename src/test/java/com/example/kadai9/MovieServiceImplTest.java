@@ -4,14 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MovieServiceImplTest {
@@ -41,6 +39,14 @@ public class MovieServiceImplTest {
         List<Movie> actual = movieServiceImpl.findMovies(null);
         assertThat(actual)
                 .isEqualTo(testMovies);
+    }
+
+    @Test
+    public void 映画を登録できること() {
+        Movie testMovie = new Movie("名探偵コナン 黒鉄の魚影(サブマリン)",2023);
+        doNothing().when(movieMapper).createMovie(testMovie);
+        movieServiceImpl.createMovie(new CreateMovieForm("名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        verify(movieMapper).createMovie(testMovie);
     }
 
 }

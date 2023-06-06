@@ -5,8 +5,7 @@ public class CreateMovieForm {
     private String movieTitle;
     private int publishedYear;
 
-    public CreateMovieForm(int id, String movieTitle, int publishedYear) {
-        this.id = id;
+    public CreateMovieForm(String movieTitle, int publishedYear) {
         this.movieTitle = movieTitle;
         this.publishedYear = publishedYear;
     }
