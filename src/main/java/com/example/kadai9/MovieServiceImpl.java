@@ -23,6 +23,16 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
+    public Movie findMovieById(int id){
+        Optional<Movie> movie = movieMapper.findMovieById(id);
+        if(movie.isPresent()){
+            return movie.get();
+        } else {
+            throw new ResourceNotFoundException("resource not found");
+        }
+    }
+
+    @Override
     public Movie createMovie(CreateMovieForm createMovieForm){
         Movie movie = new Movie(createMovieForm.getId(), createMovieForm.getMovieTitle(), createMovieForm.getPublishedYear());
         movieMapper.createMovie(movie);

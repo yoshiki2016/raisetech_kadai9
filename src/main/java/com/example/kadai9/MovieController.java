@@ -25,6 +25,12 @@ public class MovieController {
         return movieService.findMovies(publishedYear);
     }
 
+    // idによる検索
+    @GetMapping("/movies/{id}")
+    public Movie findMovieById(@PathVariable("id") int id) {
+        return movieService.findMovieById(id);
+    }
+
     @PostMapping("/movies")
     public ResponseEntity<Map<String, String>> createMovie(@RequestBody CreateMovieForm createMovieForm, UriComponentsBuilder uriBuilder) {
         Movie movie = movieService.createMovie(createMovieForm);
