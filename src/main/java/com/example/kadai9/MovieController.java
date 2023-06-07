@@ -1,15 +1,12 @@
 package com.example.kadai9;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.swing.text.html.Option;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class MovieController {
@@ -32,8 +29,8 @@ public class MovieController {
     }
 
     @PostMapping("/movies")
-    public ResponseEntity<Map<String, String>> createMovie(@RequestBody CreateMovieForm createMovieForm, UriComponentsBuilder uriBuilder) {
-        Movie movie = movieService.createMovie(createMovieForm);
+    public ResponseEntity<Map<String, String>> createMovie(@RequestBody MovieForm movieForm, UriComponentsBuilder uriBuilder) {
+        Movie movie = movieService.createMovie(movieForm);
         URI url = uriBuilder
                 .path("/movies/" + movie.getId())
                 .build()
@@ -42,8 +39,8 @@ public class MovieController {
     }
 
     @PatchMapping("/movies/{id}")
-    public ResponseEntity<Map<String, String>> updateMovie(@PathVariable("id") int id, @RequestBody CreateMovieForm createMovieForm) {
-        Movie movie = new Movie(id, createMovieForm.getMovieTitle(), createMovieForm.getPublishedYear());
+    public ResponseEntity<Map<String, String>> updateMovie(@PathVariable("id") int id, @RequestBody MovieForm movieForm) {
+        Movie movie = new Movie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
         movieService.updateMovie(movie);
         return ResponseEntity.ok(Map.of("message", "the movie successfully updated"));
     }

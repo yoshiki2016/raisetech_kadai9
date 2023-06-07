@@ -64,7 +64,7 @@ public class MovieServiceImplTest {
     public void 映画を登録できること() {
         Movie testMovie = new Movie("名探偵コナン 黒鉄の魚影(サブマリン)",2023);
         doNothing().when(movieMapper).createMovie(testMovie);
-        movieServiceImpl.createMovie(new CreateMovieForm("名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        movieServiceImpl.createMovie(new MovieForm("名探偵コナン 黒鉄の魚影(サブマリン)",2023));
         verify(movieMapper).createMovie(testMovie);
     }
 

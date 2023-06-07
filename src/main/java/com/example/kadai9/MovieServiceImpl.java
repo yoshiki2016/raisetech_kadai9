@@ -33,8 +33,8 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie createMovie(CreateMovieForm createMovieForm){
-        Movie movie = new Movie(createMovieForm.getId(), createMovieForm.getMovieTitle(), createMovieForm.getPublishedYear());
+    public Movie createMovie(MovieForm movieForm){
+        Movie movie = new Movie(movieForm.getId(), movieForm.getMovieTitle(), movieForm.getPublishedYear());
         movieMapper.createMovie(movie);
         return movie;
     }
