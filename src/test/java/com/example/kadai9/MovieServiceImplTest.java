@@ -7,8 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -44,24 +46,55 @@ public class MovieServiceImplTest {
     }
 
     @Test
+    public void 指定のIDの映画が存在する時に返却できること() {
+        doReturn(Optional.of(new Movie(1,"アルマゲドン",1998))).when(movieMapper).findMovieById(1);
+        Movie actual = movieServiceImpl.findMovieById(1);
+        assertThat(actual).isEqualTo(new Movie(1,"アルマゲドン", 1998));
+    }
+
+    @Test
+    public void 指定のIDの映画が存在しないときに例外をThrowすること() {
+        doReturn(Optional.empty()).when(movieMapper).findMovieById(1);
+        assertThatThrownBy(() -> movieServiceImpl.findMovieById(1))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("resource not found");
+    }
+
+    @Test
     public void 映画を登録できること() {
         Movie testMovie = new Movie("名探偵コナン 黒鉄の魚影(サブマリン)",2023);
         doNothing().when(movieMapper).createMovie(testMovie);
-        movieServiceImpl.createMovie(new CreateMovieForm("名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        movieServiceImpl.createMovie("名探偵コナン 黒鉄の魚影(サブマリン)",2023);
         verify(movieMapper).createMovie(testMovie);
     }
 
     @Test
     public void 映画を更新できること() {
-        doNothing().when(movieMapper).updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
-        movieServiceImpl.updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
-        verify(movieMapper).updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        doReturn(Optional.of(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023))).when(movieMapper).findMovieById(1);
+        movieServiceImpl.updateMovie(1,"アルマゲドン", 1998);
+        verify(movieMapper).updateMovie(new Movie(1,"アルマゲドン", 1998));
+    }
+
+    @Test
+    public void 更新対象の映画が存在しないときに例外をthrowすること() {
+        doReturn(Optional.empty()).when(movieMapper).findMovieById(1);
+        assertThatThrownBy(() -> movieServiceImpl.updateMovie(1,"アルマゲドン", 1998))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("resource not found");
     }
 
     @Test
     public void 映画を削除できること() {
-        doNothing().when(movieMapper).deleteMovie(1);
+        doReturn(Optional.of(new Movie(1,"アルマゲドン", 1998))).when(movieMapper).findMovieById(1);
         movieServiceImpl.deleteMovie(1);
         verify(movieMapper).deleteMovie(1);
+    }
+
+    @Test
+    public void 削除対象の映画が存在しないときに例外をthrowすること() {
+        doReturn(Optional.empty()).when(movieMapper).findMovieById(1);
+        assertThatThrownBy(() -> movieServiceImpl.deleteMovie(1))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("resource not found");
     }
 }

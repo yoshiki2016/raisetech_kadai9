@@ -23,19 +23,40 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie createMovie(CreateMovieForm createMovieForm){
-        Movie movie = new Movie(createMovieForm.getId(), createMovieForm.getMovieTitle(), createMovieForm.getPublishedYear());
+    public Movie findMovieById(int id){
+        Optional<Movie> movie = movieMapper.findMovieById(id);
+        if(movie.isPresent()){
+            return movie.get();
+        } else {
+            throw new ResourceNotFoundException("resource not found");
+        }
+    }
+
+    @Override
+    public Movie createMovie(String movieTitle, int publishedYear){
+        Movie movie = new Movie(movieTitle, publishedYear);
         movieMapper.createMovie(movie);
         return movie;
     }
 
     @Override
-    public void updateMovie(Movie movie){
-        movieMapper.updateMovie(movie);
+    public void updateMovie(int id, String movieTitle,int publishedYear){
+        Optional<Movie> targetMovie = movieMapper.findMovieById(id);
+        if (targetMovie.isPresent()){
+            Movie movie = new Movie(id, movieTitle, publishedYear);
+            movieMapper.updateMovie(movie);
+        } else {
+            throw  new ResourceNotFoundException("resource not found");
+        }
     }
 
     @Override
     public void deleteMovie(int id){
-        movieMapper.deleteMovie(id);
+        Optional<Movie> targetMovie = movieMapper.findMovieById(id);
+        if(targetMovie.isPresent()){
+            movieMapper.deleteMovie(id);
+        } else {
+            throw  new ResourceNotFoundException("resource not found");
+        }
     };
 }

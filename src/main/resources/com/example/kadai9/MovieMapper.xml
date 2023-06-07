@@ -7,6 +7,9 @@
     <select id="findMovies" parameterType="int" resultType="com.example.kadai9.Movie">
         SELECT * FROM movies WHERE published_year = #{publishedYear}
     </select>
+    <select id="findMovieById" parameterType="int" resultType="com.example.kadai9.Movie">
+        SELECT * FROM movies WHERE id = #{id}
+    </select>
     <insert id="createMovie" parameterType="com.example.kadai9.Movie" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO movies (movie_title, published_year) VALUES (#{movieTitle}, #{publishedYear});
     </insert>
