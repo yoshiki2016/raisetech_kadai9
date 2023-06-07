@@ -51,4 +51,10 @@ public class MovieServiceImplTest {
         verify(movieMapper).createMovie(testMovie);
     }
 
+    @Test
+    public void 映画を更新できること() {
+        doNothing().when(movieMapper).updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        movieServiceImpl.updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        verify(movieMapper).updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+    }
 }
