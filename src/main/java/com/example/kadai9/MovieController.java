@@ -30,7 +30,7 @@ public class MovieController {
 
     @PostMapping("/movies")
     public ResponseEntity<Map<String, String>> createMovie(@RequestBody MovieForm movieForm, UriComponentsBuilder uriBuilder) {
-        Movie movie = movieService.createMovie(movieForm);
+        Movie movie = movieService.createMovie(movieForm.getMovieTitle(), movieForm.getPublishedYear());
         URI url = uriBuilder
                 .path("/movies/" + movie.getId())
                 .build()
@@ -40,8 +40,7 @@ public class MovieController {
 
     @PatchMapping("/movies/{id}")
     public ResponseEntity<Map<String, String>> updateMovie(@PathVariable("id") int id, @RequestBody MovieForm movieForm) {
-        Movie movie = new Movie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
-        movieService.updateMovie(movie);
+        movieService.updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
         return ResponseEntity.ok(Map.of("message", "the movie successfully updated"));
     }
     // 削除メソッド作成

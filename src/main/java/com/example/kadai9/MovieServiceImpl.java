@@ -33,16 +33,17 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie createMovie(MovieForm movieForm){
-        Movie movie = new Movie(movieForm.getId(), movieForm.getMovieTitle(), movieForm.getPublishedYear());
+    public Movie createMovie(String movieTitle, int publishedYear){
+        Movie movie = new Movie(movieTitle, publishedYear);
         movieMapper.createMovie(movie);
         return movie;
     }
 
     @Override
-    public void updateMovie(Movie movie){
-        Optional<Movie> targetMovie = movieMapper.findMovieById(movie.getId());
+    public void updateMovie(int id, String movieTitle,int publishedYear){
+        Optional<Movie> targetMovie = movieMapper.findMovieById(id);
         if (targetMovie.isPresent()){
+            Movie movie = new Movie(id, movieTitle, publishedYear);
             movieMapper.updateMovie(movie);
         } else {
             throw  new ResourceNotFoundException("resource not found");

@@ -5,7 +5,7 @@ import java.util.List;
 public interface MovieService {
     List<Movie> findMovies(Integer publishedYear);
     Movie findMovieById(int id);
-    Movie createMovie(MovieForm movieForm);
-    void updateMovie(Movie movie);
+    Movie createMovie(String movieTitle, int publishedYear);
+    void updateMovie(int id, String movieTitle,int publishedYear);
     void deleteMovie(int id);
 }

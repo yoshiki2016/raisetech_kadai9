@@ -64,21 +64,21 @@ public class MovieServiceImplTest {
     public void 映画を登録できること() {
         Movie testMovie = new Movie("名探偵コナン 黒鉄の魚影(サブマリン)",2023);
         doNothing().when(movieMapper).createMovie(testMovie);
-        movieServiceImpl.createMovie(new MovieForm("名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        movieServiceImpl.createMovie("名探偵コナン 黒鉄の魚影(サブマリン)",2023);
         verify(movieMapper).createMovie(testMovie);
     }
 
     @Test
     public void 映画を更新できること() {
         doReturn(Optional.of(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023))).when(movieMapper).findMovieById(1);
-        movieServiceImpl.updateMovie(new Movie(1,"アルマゲドン", 1998));
+        movieServiceImpl.updateMovie(1,"アルマゲドン", 1998);
         verify(movieMapper).updateMovie(new Movie(1,"アルマゲドン", 1998));
     }
 
     @Test
     public void 更新対象の映画が存在しないときに例外をthrowすること() {
         doReturn(Optional.empty()).when(movieMapper).findMovieById(1);
-        assertThatThrownBy(() -> movieServiceImpl.updateMovie(new Movie(1,"アルマゲドン", 1998)))
+        assertThatThrownBy(() -> movieServiceImpl.updateMovie(1,"アルマゲドン", 1998))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("resource not found");
     }
