@@ -7,8 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -41,6 +43,21 @@ public class MovieServiceImplTest {
         List<Movie> actual = movieServiceImpl.findMovies(null);
         assertThat(actual)
                 .isEqualTo(testMovies);
+    }
+
+    @Test
+    public void 指定のIDの映画が存在する時に返却できること() {
+        doReturn(Optional.of(new Movie(1,"アルマゲドン",1998))).when(movieMapper).findMovieById(1);
+        Movie actual = movieServiceImpl.findMovieById(1);
+        assertThat(actual).isEqualTo(new Movie(1,"アルマゲドン", 1998));
+    }
+
+    @Test
+    public void 指定のIDの映画が存在しないときに例外をThrowすること() {
+        doReturn(Optional.empty()).when(movieMapper).findMovieById(1);
+        assertThatThrownBy(() -> movieServiceImpl.findMovieById(1))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("resource not found");
     }
 
     @Test

@@ -41,8 +41,9 @@ public class MovieController {
         return ResponseEntity.created(url).body(Map.of("message", "the movie successfully created"));
     }
 
-    @PatchMapping("/movies")
-    public ResponseEntity<Map<String, String>> updateMovie(@RequestBody Movie movie) {
+    @PatchMapping("/movies/{id}")
+    public ResponseEntity<Map<String, String>> updateMovie(@PathVariable("id") int id, @RequestBody CreateMovieForm createMovieForm) {
+        Movie movie = new Movie(id, createMovieForm.getMovieTitle(), createMovieForm.getPublishedYear());
         movieService.updateMovie(movie);
         return ResponseEntity.ok(Map.of("message", "the movie successfully updated"));
     }

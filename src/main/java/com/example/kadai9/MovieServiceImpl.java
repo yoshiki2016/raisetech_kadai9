@@ -41,11 +41,21 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public void updateMovie(Movie movie){
-        movieMapper.updateMovie(movie);
+        Optional<Movie> targetMovie = movieMapper.findMovieById(movie.getId());
+        if (targetMovie.isPresent()){
+            movieMapper.updateMovie(movie);
+        } else {
+            throw  new ResourceNotFoundException("resource not found");
+        }
     }
 
     @Override
     public void deleteMovie(int id){
-        movieMapper.deleteMovie(id);
+        Optional<Movie> targetMovie = movieMapper.findMovieById(id);
+        if(targetMovie.isPresent()){
+            movieMapper.deleteMovie(id);
+        } else {
+            throw  new ResourceNotFoundException("resource not found");
+        }
     };
 }
