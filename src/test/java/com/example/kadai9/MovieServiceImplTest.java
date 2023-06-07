@@ -57,4 +57,11 @@ public class MovieServiceImplTest {
         movieServiceImpl.updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
         verify(movieMapper).updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
     }
+
+    @Test
+    public void 映画を削除できること() {
+        doNothing().when(movieMapper).deleteMovie(1);
+        movieServiceImpl.deleteMovie(1);
+        verify(movieMapper).deleteMovie(1);
+    }
 }
