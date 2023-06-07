@@ -70,15 +70,31 @@ public class MovieServiceImplTest {
 
     @Test
     public void 映画を更新できること() {
-        doNothing().when(movieMapper).updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
-        movieServiceImpl.updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
-        verify(movieMapper).updateMovie(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023));
+        doReturn(Optional.of(new Movie(1, "名探偵コナン 黒鉄の魚影(サブマリン)",2023))).when(movieMapper).findMovieById(1);
+        movieServiceImpl.updateMovie(new Movie(1,"アルマゲドン", 1998));
+        verify(movieMapper).updateMovie(new Movie(1,"アルマゲドン", 1998));
+    }
+
+    @Test
+    public void 更新対象の映画が存在しないときに例外をthrowすること() {
+        doReturn(Optional.empty()).when(movieMapper).findMovieById(1);
+        assertThatThrownBy(() -> movieServiceImpl.updateMovie(new Movie(1,"アルマゲドン", 1998)))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("resource not found");
     }
 
     @Test
     public void 映画を削除できること() {
-        doNothing().when(movieMapper).deleteMovie(1);
+        doReturn(Optional.of(new Movie(1,"アルマゲドン", 1998))).when(movieMapper).findMovieById(1);
         movieServiceImpl.deleteMovie(1);
         verify(movieMapper).deleteMovie(1);
+    }
+
+    @Test
+    public void 削除対象の映画が存在しないときに例外をthrowすること() {
+        doReturn(Optional.empty()).when(movieMapper).findMovieById(1);
+        assertThatThrownBy(() -> movieServiceImpl.deleteMovie(1))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("resource not found");
     }
 }
