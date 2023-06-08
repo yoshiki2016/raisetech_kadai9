@@ -61,7 +61,7 @@ class MovieMapperTest {
     public void 指定のIDの映画が取得できること() {
         Optional<Movie> movie = movieMapper.findMovieById(1);
         assertThat(movie)
-                .contains(
+                .containsExactly(
                         new Movie(1, "アルマゲドン", 2000)
                 );
     }
