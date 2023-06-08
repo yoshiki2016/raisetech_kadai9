@@ -28,7 +28,7 @@ class MovieMapperTest {
         List<Movie> movieList = movieMapper.findAll();
         assertThat(movieList)
             .hasSize(3)
-            .contains(
+            .containsExactly(
                     new Movie(1, "アルマゲドン", 2000),
                     new Movie(2, "トイ・ストリー2", 2000),
                     new Movie(3, "機動戦士ガンダム 逆襲のシャア", 1988)
@@ -50,7 +50,7 @@ class MovieMapperTest {
         List<Movie> movieList = movieMapper.findMovies(1988);
         assertThat(movieList)
             .hasSize(1)
-            .contains(
+            .containsExactly(
                     new Movie(3, "機動戦士ガンダム 逆襲のシャア", 1988)
             );
     }
@@ -60,7 +60,8 @@ class MovieMapperTest {
     @Transactional
     public void 指定のIDの映画が取得できること() {
         Optional<Movie> movie = movieMapper.findMovieById(1);
-        assertThat(movie)
+        List<Movie> movieChecked = movie.isPresent() ? List.of(new Movie(movie.get().getId(), movie.get().getMovieTitle(), movie.get().getPublishedYear())) : List.of() ;
+        assertThat(movieChecked)
                 .containsExactly(
                         new Movie(1, "アルマゲドン", 2000)
                 );
