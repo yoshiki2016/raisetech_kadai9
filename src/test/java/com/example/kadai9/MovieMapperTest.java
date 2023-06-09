@@ -60,11 +60,9 @@ class MovieMapperTest {
     @Transactional
     public void 指定のIDの映画が取得できること() {
         Optional<Movie> movie = movieMapper.findMovieById(1);
-        List<Movie> movieChecked = movie.isPresent() ? List.of(new Movie(movie.get().getId(), movie.get().getMovieTitle(), movie.get().getPublishedYear())) : List.of() ;
-        assertThat(movieChecked)
-                .containsExactly(
-                        new Movie(1, "アルマゲドン", 2000)
-                );
+        assertThat(movie).contains(
+                new Movie(1, "アルマゲドン", 2000)
+        );
     }
 
     @Test
