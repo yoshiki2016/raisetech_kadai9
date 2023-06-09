@@ -1,0 +1,7 @@
+movies:
+  - id: 2
+    movie_title: "トイ・ストリー2"
+    published_year: 2000
+  - id: 3
+    movie_title: "機動戦士ガンダム 逆襲のシャア"
+    published_year: 1988

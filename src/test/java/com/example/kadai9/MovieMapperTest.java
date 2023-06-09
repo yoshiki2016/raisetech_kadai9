@@ -94,4 +94,19 @@ class MovieMapperTest {
         assertThat(movie5.getId()).isGreaterThan(movie4.getId());
     }
 
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    @ExpectedDataSet(value = "movieUpdateList.yml")
+    public void 映画情報を上書きできること() {
+        Movie updateMovie = new Movie(2, "ターミネーター", 1984);
+        movieMapper.updateMovie(updateMovie);
+    }
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    @ExpectedDataSet(value = "movieDeleteList.yml")
+    public void 映画を削除できること() {
+        movieMapper.deleteMovie(1);
+    }
 }
