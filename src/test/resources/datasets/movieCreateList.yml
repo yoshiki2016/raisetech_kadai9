@@ -1,0 +1,16 @@
+movies:
+  - id: 1
+    movie_title: "アルマゲドン"
+    published_year: 2000
+  - id: 2
+    movie_title: "トイ・ストリー2"
+    published_year: 2000
+  - id: 3
+    movie_title: "機動戦士ガンダム 逆襲のシャア"
+    published_year: 1988
+  - id: 4
+    movie_title: "借りぐらしのアリエッティ"
+    published_year: 2010
+  - id: 5
+    movie_title: "ドラゴンボールZ 神と神"
+    published_year: 2013
