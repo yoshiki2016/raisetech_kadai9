@@ -1,6 +1,5 @@
 package com.example.kadai9;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,6 +12,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,7 +30,7 @@ class MovieControllerTest {
         List<Movie> movieList = List.of(
                 new Movie(1, "アルマゲドン", 2000),
                 new Movie(2, "トイ・ストーリー2", 2000),
-                new Movie(3, "機動戦士ガンダム 逆襲のシャア", 2000)
+                new Movie(3, "機動戦士ガンダム 逆襲のシャア", 1988)
         );
 
         given(movieServiceImpl.findMovies(null)).willReturn(movieList);
@@ -39,9 +39,25 @@ class MovieControllerTest {
         mockMvc.perform(get("/movies")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)));
-
-        // JSONデータの突き合わせ
-        // やり方検索中
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(content().json("""
+                        [
+                        {
+                        "id":1,
+                        "movieTitle":"アルマゲドン",
+                        "publishedYear":2000
+                        },
+                        {
+                        "id":2,
+                        "movieTitle":"トイ・ストーリー2",
+                        "publishedYear":2000
+                        },
+                        {
+                        "id":3,
+                        "movieTitle":"機動戦士ガンダム 逆襲のシャア",
+                        "publishedYear":1988
+                        }
+                        ]
+                        """));
     }
 }
