@@ -70,7 +70,7 @@ class MovieControllerTest {
         given(movieServiceImpl.findMovies(1988)).willReturn(movieList);
 
         // ステータスとサイズの確認
-        mockMvc.perform(get("/movies?publishedYear=1998")
+        mockMvc.perform(get("/movies?publishedYear=1988")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
