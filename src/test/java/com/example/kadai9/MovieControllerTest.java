@@ -1,7 +1,8 @@
 package com.example.kadai9;
 
+import net.minidev.json.JSONUtil;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +24,9 @@ class MovieControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @MockBean
     MovieServiceImpl movieServiceImpl;
@@ -103,8 +108,16 @@ class MovieControllerTest {
     }
 
     @Test
-    public void 映画が登録できること() {
-        MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);
-        given(movieServiceImpl.createMovie(movieForm.getMovieTitle(), movieForm.getPublishedYear())).willReturn(/* 引数どうするかわからない */);
+    public void 映画が登録できること() throws Exception {
+        MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);   // 画面からの入力値
+        Movie createMovie = new Movie(10, movieForm.getMovieTitle(), movieForm.getPublishedYear()); // 10はオートインクリメントの結果
+        given(movieServiceImpl.createMovie(movieForm.getMovieTitle(), movieForm.getPublishedYear())).willReturn(createMovie);
+
+        String requestBody = objectMapper.writeValueAsString(movieForm);
+
+        mockMvc.perform(post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isCreated());
     }
 }
