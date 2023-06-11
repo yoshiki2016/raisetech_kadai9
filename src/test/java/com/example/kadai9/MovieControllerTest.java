@@ -1,6 +1,7 @@
 package com.example.kadai9;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -83,5 +84,27 @@ class MovieControllerTest {
                         }
                         ]
                         """));
+    }
+
+    @Test
+    public void 指定のIDの映画が取得できること() throws Exception {
+        Movie movie = new Movie(1, "アルマゲドン", 2000);
+        given(movieServiceImpl.findMovieById(1)).willReturn(movie);
+        mockMvc.perform(get("/movies/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                        "id":1,
+                        "movieTitle":"アルマゲドン",
+                        "publishedYear":2000
+                        }
+                        """));
+    }
+
+    @Test
+    public void 映画が登録できること() {
+        MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);
+        given(movieServiceImpl.createMovie(movieForm.getMovieTitle(), movieForm.getPublishedYear())).willReturn(/* 引数どうするかわからない */);
     }
 }
