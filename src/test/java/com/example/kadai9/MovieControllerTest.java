@@ -60,4 +60,28 @@ class MovieControllerTest {
                         ]
                         """));
     }
+
+    @Test
+    public void 年数指定で映画を検索できること() throws Exception {
+        List<Movie> movieList = List.of(
+                new Movie(3, "機動戦士ガンダム 逆襲のシャア", 1988)
+        );
+
+        given(movieServiceImpl.findMovies(1988)).willReturn(movieList);
+
+        // ステータスとサイズの確認
+        mockMvc.perform(get("/movies?publishedYear=1998")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(content().json("""
+                        [
+                        {
+                        "id":3,
+                        "movieTitle":"機動戦士ガンダム 逆襲のシャア",
+                        "publishedYear":1988
+                        }
+                        ]
+                        """));
+    }
 }
