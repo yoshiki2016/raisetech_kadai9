@@ -1,12 +1,13 @@
 package com.example.kadai9;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 public class MovieForm {
     @NotBlank
     private String movieTitle;
 
-    @NotBlank
+    @Positive
     private int publishedYear;
 
     public MovieForm(String movieTitle, int publishedYear) {
