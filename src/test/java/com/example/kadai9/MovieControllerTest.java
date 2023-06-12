@@ -2,6 +2,7 @@ package com.example.kadai9;
 
 import net.minidev.json.JSONUtil;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,8 +26,8 @@ class MovieControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+//    @Autowired
+//    ObjectMapper objectMapper;
 
     @MockBean
     MovieServiceImpl movieServiceImpl;
@@ -113,7 +114,8 @@ class MovieControllerTest {
         Movie createMovie = new Movie(10, movieForm.getMovieTitle(), movieForm.getPublishedYear()); // 10はオートインクリメントの結果
         given(movieServiceImpl.createMovie(movieForm.getMovieTitle(), movieForm.getPublishedYear())).willReturn(createMovie);
 
-        String requestBody = objectMapper.writeValueAsString(movieForm);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String requestBody = ow.writeValueAsString(movieForm);
 
         mockMvc.perform(post("/movies")
                 .contentType(MediaType.APPLICATION_JSON)
