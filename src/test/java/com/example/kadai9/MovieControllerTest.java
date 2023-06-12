@@ -1,15 +1,17 @@
 package com.example.kadai9;
 
-import net.minidev.json.JSONUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -25,9 +27,6 @@ class MovieControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-
-//    @Autowired
-//    ObjectMapper objectMapper;
 
     @MockBean
     MovieServiceImpl movieServiceImpl;
@@ -117,9 +116,27 @@ class MovieControllerTest {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String requestBody = ow.writeValueAsString(movieForm);
 
-        mockMvc.perform(post("/movies")
+        String response = mockMvc.perform(post("/movies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                "message" : "the movie successfully created"
+                }
+                """, response, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    public void 不正な内容で映画を新規登録すると失敗すること() throws Exception {
+        mockMvc.perform(post("/movies")
+                // 入力を空で受け付けた場合
+                .content("""
+                        {"movieTitle":"","publishedYear": }
+                        """)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400));
     }
 }

@@ -1,6 +1,7 @@
 package com.example.kadai9;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,7 +30,7 @@ public class MovieController {
     }
 
     @PostMapping("/movies")
-    public ResponseEntity<Map<String, String>> createMovie(@RequestBody MovieForm movieForm, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Map<String, String>> createMovie(@RequestBody @Validated MovieForm movieForm, UriComponentsBuilder uriBuilder) {
         Movie movie = movieService.createMovie(movieForm.getMovieTitle(), movieForm.getPublishedYear());
         URI url = uriBuilder
                 .path("/movies/" + movie.getId())
@@ -39,7 +40,7 @@ public class MovieController {
     }
 
     @PatchMapping("/movies/{id}")
-    public ResponseEntity<Map<String, String>> updateMovie(@PathVariable("id") int id, @RequestBody MovieForm movieForm) {
+    public ResponseEntity<Map<String, String>> updateMovie(@PathVariable("id") int id, @RequestBody @Validated MovieForm movieForm) {
         movieService.updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
         return ResponseEntity.ok(Map.of("message", "the movie successfully updated"));
     }
