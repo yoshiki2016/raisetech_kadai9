@@ -17,7 +17,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -117,6 +117,7 @@ class MovieControllerTest {
         Movie createMovie = new Movie(10, movieForm.getMovieTitle(), movieForm.getPublishedYear()); // 10はオートインクリメントの結果
         given(movieServiceImpl.createMovie(movieForm.getMovieTitle(), movieForm.getPublishedYear())).willReturn(createMovie);
 
+        // JSON形式のデータに変換
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String requestBody = ow.writeValueAsString(movieForm);
 
@@ -153,6 +154,7 @@ class MovieControllerTest {
         MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);   // 画面からの入力値
         doNothing().when(movieServiceImpl).updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
 
+        // JSON形式のデータに変換
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String requestBody = ow.writeValueAsString(movieForm);
 
@@ -187,7 +189,16 @@ class MovieControllerTest {
     public void 存在しないIDの映画を更新した際にResourceNotFoundExceptionを返すこと() throws Exception {
         int id = 1000; // 存在しないID
         MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);   // 画面からの入力値
-        when(movieServiceImpl.updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear())).thenThrow(new ResourceNotFoundException("resource not found"));
+        doThrow(new ResourceNotFoundException("resource not found")).when(movieServiceImpl).updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
+
+        // JSON形式のデータに変換
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String requestBody = ow.writeValueAsString(movieForm);
+
+        mockMvc.perform(patch("/movies/1000")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isNotFound()); // statusが404であることの確認
     }
 
     @Test
@@ -206,8 +217,13 @@ class MovieControllerTest {
     }
 
     @Test
-    public void 存在しないIDの映画を削除した際にResourceNotFoundExceptionを返すこと() {
-        // これから作成
+    public void 存在しないIDの映画を削除した際にResourceNotFoundExceptionを返すこと() throws Exception {
+        int id = 1000; // 存在しないID
+        doThrow(new ResourceNotFoundException("resource not found")).when(movieServiceImpl).deleteMovie(id);
+
+        mockMvc.perform(delete("/movies/1000")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound()); // statusが404であることの確認
     }
 
 }
