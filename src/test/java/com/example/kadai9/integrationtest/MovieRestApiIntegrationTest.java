@@ -114,4 +114,12 @@ public class MovieRestApiIntegrationTest {
                 """, response, true);
         }
     }
+
+    @Test
+    @DataSet(value = "movieList.yml")
+    @Transactional
+    void publishedYearに不正な値を入力したら400エラーになること() throws Exception {
+        mockMvc.perform(get("/movies?publishedYear=aaa"))
+                .andExpect(status().isBadRequest());
+    }
 }
