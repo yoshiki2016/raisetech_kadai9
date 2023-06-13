@@ -48,21 +48,21 @@ class MovieControllerTest {
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(content().json("""
                         [
-                        {
-                        "id":1,
-                        "movieTitle":"アルマゲドン",
-                        "publishedYear":2000
-                        },
-                        {
-                        "id":2,
-                        "movieTitle":"トイ・ストーリー2",
-                        "publishedYear":2000
-                        },
-                        {
-                        "id":3,
-                        "movieTitle":"機動戦士ガンダム 逆襲のシャア",
-                        "publishedYear":1988
-                        }
+                           {
+                              "id":1,
+                              "movieTitle":"アルマゲドン",
+                              "publishedYear":2000
+                           },
+                           {
+                              "id":2,
+                              "movieTitle":"トイ・ストーリー2",
+                              "publishedYear":2000
+                           },
+                           {
+                              "id":3,
+                              "movieTitle":"機動戦士ガンダム 逆襲のシャア",
+                              "publishedYear":1988
+                           }
                         ]
                         """));
     }
@@ -82,11 +82,11 @@ class MovieControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(content().json("""
                         [
-                        {
-                        "id":3,
-                        "movieTitle":"機動戦士ガンダム 逆襲のシャア",
-                        "publishedYear":1988
-                        }
+                           {
+                              "id":3,
+                              "movieTitle":"機動戦士ガンダム 逆襲のシャア",
+                              "publishedYear":1988
+                           }
                         ]
                         """));
     }
@@ -100,9 +100,9 @@ class MovieControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
-                        "id":1,
-                        "movieTitle":"アルマゲドン",
-                        "publishedYear":2000
+                           "id":1,
+                           "movieTitle":"アルマゲドン",
+                           "publishedYear":2000
                         }
                         """));
     }
@@ -123,7 +123,7 @@ class MovieControllerTest {
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
                 {
-                "message" : "the movie successfully created"
+                    "message" : "the movie successfully created"
                 }
                 """, response, JSONCompareMode.STRICT);
     }
@@ -133,7 +133,10 @@ class MovieControllerTest {
         mockMvc.perform(post("/movies")
                 // 入力を空で受け付けた場合
                 .content("""
-                        {"movieTitle":"","publishedYear": }
+                        {
+                           "movieTitle":"",
+                           "publishedYear":
+                        }
                         """)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
