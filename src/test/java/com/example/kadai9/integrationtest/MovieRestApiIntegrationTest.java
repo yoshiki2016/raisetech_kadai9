@@ -92,7 +92,6 @@ public class MovieRestApiIntegrationTest {
                 """, response, JSONCompareMode.STRICT);
     }
 
-//    404エラーの単体テストの実装は後回し
     @Test
     @DataSet(value = "movieList.yml")
     @Transactional
