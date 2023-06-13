@@ -1,17 +1,18 @@
 package com.example.kadai9;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 public class MovieForm {
-    private int id;
+    @NotBlank
     private String movieTitle;
+
+    @Positive
     private int publishedYear;
 
     public MovieForm(String movieTitle, int publishedYear) {
         this.movieTitle = movieTitle;
         this.publishedYear = publishedYear;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getMovieTitle() {
