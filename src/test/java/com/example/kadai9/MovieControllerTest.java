@@ -17,6 +17,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -183,6 +184,13 @@ class MovieControllerTest {
     }
 
     @Test
+    public void 存在しないIDの映画を更新した際にResourceNotFoundExceptionを返すこと() throws Exception {
+        int id = 1000; // 存在しないID
+        MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);   // 画面からの入力値
+        when(movieServiceImpl.updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear())).thenThrow(new ResourceNotFoundException("resource not found"));
+    }
+
+    @Test
     public void 指定の映画を削除できること() throws Exception {
         int id = 10;
         doNothing().when(movieServiceImpl).deleteMovie(id);
@@ -196,4 +204,10 @@ class MovieControllerTest {
                 }
                 """, response, JSONCompareMode.STRICT);
     }
+
+    @Test
+    public void 存在しないIDの映画を削除した際にResourceNotFoundExceptionを返すこと() {
+        // これから作成
+    }
+
 }
