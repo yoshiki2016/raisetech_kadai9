@@ -16,7 +16,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -141,5 +144,56 @@ class MovieControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400));
+    }
+
+    @Test
+    public void 映画を更新できること() throws Exception {
+        int id = 10;
+        MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);   // 画面からの入力値
+        doNothing().when(movieServiceImpl).updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String requestBody = ow.writeValueAsString(movieForm);
+
+        String response = mockMvc.perform(patch("/movies/10")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message" : "the movie successfully updated"
+                }
+                """, response, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    public void 不正な内容で映画を更新すると失敗すること() throws Exception {
+        mockMvc.perform(patch("/movies/10")
+                        // 入力を空で受け付けた場合
+                        .content("""
+                        {
+                           "movieTitle":"",
+                           "publishedYear":
+                        }
+                        """)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400));
+    }
+
+    @Test
+    public void 指定の映画を削除できること() throws Exception {
+        int id = 10;
+        doNothing().when(movieServiceImpl).deleteMovie(id);
+        String response = mockMvc.perform(delete("/movies/10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message" : "the movie successfully deleted"
+                }
+                """, response, JSONCompareMode.STRICT);
     }
 }
