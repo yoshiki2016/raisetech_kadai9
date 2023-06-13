@@ -134,15 +134,15 @@ class MovieControllerTest {
     @Test
     public void 不正な内容で映画を新規登録すると失敗すること() throws Exception {
         mockMvc.perform(post("/movies")
-                // 入力を空で受け付けた場合
-                .content("""
+                        // 入力を空で受け付けた場合
+                        .content("""
                         {
                            "movieTitle":"",
                            "publishedYear":
                         }
                         """)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400));
     }
 
@@ -156,8 +156,8 @@ class MovieControllerTest {
         String requestBody = ow.writeValueAsString(movieForm);
 
         String response = mockMvc.perform(patch("/movies/10")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
@@ -187,7 +187,7 @@ class MovieControllerTest {
         int id = 10;
         doNothing().when(movieServiceImpl).deleteMovie(id);
         String response = mockMvc.perform(delete("/movies/10")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         JSONAssert.assertEquals("""
