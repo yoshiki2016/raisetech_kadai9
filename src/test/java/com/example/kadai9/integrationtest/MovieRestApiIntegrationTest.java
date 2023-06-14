@@ -92,25 +92,34 @@ public class MovieRestApiIntegrationTest {
                 """, response, JSONCompareMode.STRICT);
     }
 
-//    404エラーの単体テストの実装は後回し
-//    @Test
-//    @DataSet(value = "movieList.yml")
-//    @Transactional
-//    void 存在しないIDの映画を取得しようとすると404エラーになること() throws Exception {
-//        ZonedDateTime zonedDateTime = ZonedDateTime.of(2023, 6, 16, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
-//        try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)){
-//            String response = mockMvc.perform(get("/movies/100"))
-//                    .andExpect(status().isNotFound())
-//                    .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-//            JSONAssert.assertEquals("""
-//               {
-//                  "timestamp": 2023-06-16T13:00+09:00[Asia/Tokyo]",
-//                  "message": "resource not found",
-//                  "status": "404",
-//                  "path": "/movies/100",
-//                  "error": "Not Found"
-//               }
-//                """, response, true);
-//        }
-//    }
+    @Test
+    @DataSet(value = "movieList.yml")
+    @Transactional
+    void 存在しないIDの映画を取得しようとすると404エラーになること() throws Exception {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(2023, 6, 16, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+        try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)){
+            zonedDateTimeMockedStatic.when(ZonedDateTime::now).thenReturn(zonedDateTime);
+
+            String response = mockMvc.perform(get("/movies/100"))
+                    .andExpect(status().isNotFound())
+                    .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+            JSONAssert.assertEquals("""
+               {
+                  "timestamp": "2023-06-16T13:00+09:00[Asia/Tokyo]",
+                  "message": "resource not found",
+                  "status": "404",
+                  "path": "/movies/100",
+                  "error": "Not Found"
+               }
+                """, response, true);
+        }
+    }
+
+    @Test
+    @DataSet(value = "movieList.yml")
+    @Transactional
+    void publishedYearに不正な値を入力したら400エラーになること() throws Exception {
+        mockMvc.perform(get("/movies?publishedYear=aaa"))
+                .andExpect(status().isBadRequest());
+    }
 }
