@@ -124,8 +124,6 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "movieList.yml")
-    @Transactional
     void publishedYearに不正な値を入力したら400エラーになること() throws Exception {
         mockMvc.perform(get("/movies?publishedYear=aaa"))
                 .andExpect(status().isBadRequest());
@@ -158,8 +156,6 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @Transactional
-    @DataSet(value = "movieList.yml")
     void 不正な内容で映画を新規登録すると失敗すること() throws Exception {
         mockMvc.perform(post("/movies")
                 // 入力を空で受け付けた場合
