@@ -1,7 +1,11 @@
 package com.example.kadai9.integrationtest;
 
+import com.example.kadai9.MovieForm;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -10,6 +14,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +23,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -122,4 +128,49 @@ public class MovieRestApiIntegrationTest {
         mockMvc.perform(get("/movies?publishedYear=aaa"))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    @ExpectedDataSet(value = "movieCreateList.yml", ignoreCols = "id")
+    void 映画を登録できること() throws  Exception {
+        MovieForm movieForm1 = new MovieForm("借りぐらしのアリエッティ", 2010);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String requestBody1 = ow.writeValueAsString(movieForm1);
+        mockMvc.perform(post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody1))
+                .andExpect(status().isCreated()); // status codeが201であること
+        MovieForm movieForm2 = new MovieForm("ドラゴンボールZ 神と神", 2013);
+        String requestBody2 = ow.writeValueAsString(movieForm2);
+        String response = mockMvc.perform(post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody2))
+                .andExpect(status().isCreated()) // status codeが201であること
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message" : "the movie successfully created"
+                }
+                """, response, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    void 不正な内容で映画を新規登録すると失敗すること() throws Exception {
+        mockMvc.perform(post("/movies")
+                // 入力を空で受け付けた場合
+                .content("""
+                    {
+                        "movieTitle":"",
+                        "publishedYear":
+                    }
+                 """)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
 }
