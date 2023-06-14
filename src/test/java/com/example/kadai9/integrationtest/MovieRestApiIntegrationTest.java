@@ -191,8 +191,6 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @Transactional
-    @DataSet(value = "movieList.yml")
     void 不正な内容で映画を更新すると失敗すること() throws Exception {
         mockMvc.perform(patch("/movies/1")
                 // 入力を空で受け付けた場合
