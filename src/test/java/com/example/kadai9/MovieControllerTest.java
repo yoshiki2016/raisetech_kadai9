@@ -112,6 +112,12 @@ class MovieControllerTest {
     }
 
     @Test
+    void publishedYearに不正な値を入力したら400エラーになること() throws Exception {
+        mockMvc.perform(get("/movies?publishedYear=aaa"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void 映画が登録できること() throws Exception {
         MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);   // 画面からの入力値
         Movie createMovie = new Movie(10, movieForm.getMovieTitle(), movieForm.getPublishedYear()); // 10はオートインクリメントの結果
