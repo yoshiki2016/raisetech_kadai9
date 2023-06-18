@@ -1,7 +1,11 @@
 package com.example.kadai9.integrationtest;
 
+import com.example.kadai9.MovieForm;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -10,14 +14,20 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -93,8 +103,6 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "movieList.yml")
-    @Transactional
     void 存在しないIDの映画を取得しようとすると404エラーになること() throws Exception {
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2023, 6, 16, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
         try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)){
@@ -116,10 +124,157 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "movieList.yml")
-    @Transactional
     void publishedYearに不正な値を入力したら400エラーになること() throws Exception {
         mockMvc.perform(get("/movies?publishedYear=aaa"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    @ExpectedDataSet(value = "movieCreateList.yml", ignoreCols = "id")
+    void 映画を登録できること() throws  Exception {
+        MovieForm movieForm1 = new MovieForm("借りぐらしのアリエッティ", 2010);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String requestBody1 = ow.writeValueAsString(movieForm1);
+        mockMvc.perform(post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody1))
+                .andExpect(status().isCreated()) // status codeが201であること
+                .andExpect(header().string("Location", matchesPattern("http://localhost/movies/\\d+")));
+        MovieForm movieForm2 = new MovieForm("ドラゴンボールZ 神と神", 2013);
+        String requestBody2 = ow.writeValueAsString(movieForm2);
+        String response = mockMvc.perform(post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody2))
+                .andExpect(status().isCreated()) // status codeが201であること
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message" : "the movie successfully created"
+                }
+                """, response, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    void 不正な内容で映画を新規登録すると失敗すること() throws Exception {
+        mockMvc.perform(post("/movies")
+                // 入力を空で受け付けた場合
+                .content("""
+                    {
+                        "movieTitle":"",
+                        "publishedYear":
+                    }
+                 """)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    @ExpectedDataSet(value = "movieUpdateList.yml", ignoreCols = "id")
+    void 映画を更新できること() throws Exception {
+        MovieForm movieForm = new MovieForm("ターミネーター", 1984);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String requestBody = ow.writeValueAsString(movieForm);
+        String response = mockMvc.perform(patch("/movies/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message" : "the movie successfully updated"
+                }
+                """, response, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    void 不正な内容で映画を更新すると失敗すること() throws Exception {
+        mockMvc.perform(patch("/movies/1")
+                // 入力を空で受け付けた場合
+                .content("""
+                    {
+                        "movieTitle":"",
+                        "publishedYear":
+                    }
+                """)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    void 存在しないIDの映画を更新した際に失敗すること() throws Exception {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(2023, 6, 16, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+        try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)) {
+            zonedDateTimeMockedStatic.when(ZonedDateTime::now).thenReturn(zonedDateTime);
+
+            MovieForm movieForm = new MovieForm("ターミネーター", 1984);
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String requestBody = ow.writeValueAsString(movieForm);
+
+            String response = mockMvc.perform(patch("/movies/100")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+                    .andExpect(status().isNotFound())
+                    .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+            JSONAssert.assertEquals("""
+               {
+                  "timestamp": "2023-06-16T13:00+09:00[Asia/Tokyo]",
+                  "message": "resource not found",
+                  "status": "404",
+                  "path": "/movies/100",
+                  "error": "Not Found"
+               }
+                """, response, true);
+        }
+    }
+
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    @ExpectedDataSet(value = "movieDeleteList.yml", ignoreCols = "id")
+    void 指定のIDの映画が削除できること() throws Exception {
+        String response = mockMvc.perform(delete("/movies/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("""
+                {
+                    "message" : "the movie successfully deleted"
+                }
+                """, response, JSONCompareMode.STRICT);
+    }
+
+
+    @Test
+    @Transactional
+    @DataSet(value = "movieList.yml")
+    void 存在しないIDの映画を削除した際に失敗すること() throws Exception {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(2023, 6, 16, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
+        try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)) {
+            zonedDateTimeMockedStatic.when(ZonedDateTime::now).thenReturn(zonedDateTime);
+
+            String response = mockMvc.perform(delete("/movies/100")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound())
+                    .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+            JSONAssert.assertEquals("""
+               {
+                  "timestamp": "2023-06-16T13:00+09:00[Asia/Tokyo]",
+                  "message": "resource not found",
+                  "status": "404",
+                  "path": "/movies/100",
+                  "error": "Not Found"
+               }
+                """, response, true);
+        }
     }
 }
