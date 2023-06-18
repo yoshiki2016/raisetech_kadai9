@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -101,8 +103,6 @@ public class MovieRestApiIntegrationTest {
     }
 
     @Test
-    @DataSet(value = "movieList.yml")
-    @Transactional
     void 存在しないIDの映画を取得しようとすると404エラーになること() throws Exception {
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2023, 6, 16, 13, 0, 0, 0, ZoneId.of("Asia/Tokyo"));
         try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)){
@@ -140,7 +140,8 @@ public class MovieRestApiIntegrationTest {
         mockMvc.perform(post("/movies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody1))
-                .andExpect(status().isCreated()); // status codeが201であること
+                .andExpect(status().isCreated()) // status codeが201であること
+                .andExpect(header().string("Location", matchesPattern("http://localhost/movies/\\d+")));
         MovieForm movieForm2 = new MovieForm("ドラゴンボールZ 神と神", 2013);
         String requestBody2 = ow.writeValueAsString(movieForm2);
         String response = mockMvc.perform(post("/movies")
