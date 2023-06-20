@@ -2,11 +2,19 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.0'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'com.github.spotbugs' version '5.0.13'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	spotbugsStylesheets { transitive = false }
+}
 
 repositories {
 	mavenCentral()
@@ -20,8 +28,23 @@ dependencies {
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.0'
 	testImplementation group: 'com.github.database-rider', name: 'rider-spring', version: '1.32.3'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.6.0'
+	spotbugsStylesheets 'com.github.spotbugs:spotbugs:4.7.3'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+spotbugs {
+	ignoreFailures = true
+	spotbugsMain.enabled = true
+	spotbugsTest.enabled = false
+	reportsDir = file("$project.buildDir/reports")
+}
+
+spotbugsMain {
+	reports {
+		html.enabled = true
+	}
 }
