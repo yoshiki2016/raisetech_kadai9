@@ -41,6 +41,7 @@ spotbugs {
 	spotbugsMain.enabled = true
 	spotbugsTest.enabled = false
 	reportsDir = file("$project.buildDir/reports")
+	excludeFilter = file("${rootProject.projectDir}/config/spotbugs/exclude.xml")
 }
 
 spotbugsMain {
