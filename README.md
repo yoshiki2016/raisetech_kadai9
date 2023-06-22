@@ -1,10 +1,5 @@
-nameテーブルに登録されているデータを全取得するReadの実装
-```
-[yoshikishinya@YoshikinoMacBook-Pro] ~
-% curl --location 'http://localhost:8080/names'
-[{"id":1,"name":"tanaka"},{"id":2,"name":"suzuki"},{"id":3,"name":"yamada"}]%   
-```
-
+# API仕様についてまとめます。
+編集中！<br>
 movieテーブルに登録されているデータのうち<br>
 指定された年に対応するデータを取得するReadの実装
 ```
