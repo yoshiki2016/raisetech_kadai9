@@ -23,11 +23,11 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.0'
 	testImplementation group: 'com.github.database-rider', name: 'rider-spring', version: '1.32.3'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.6.0'
 	spotbugsStylesheets 'com.github.spotbugs:spotbugs:4.7.3'
 }
