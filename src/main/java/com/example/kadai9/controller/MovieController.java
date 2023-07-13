@@ -1,5 +1,8 @@
-package com.example.kadai9;
+package com.example.kadai9.controller;
 
+import com.example.kadai9.entity.Movie;
+import com.example.kadai9.form.MovieForm;
+import com.example.kadai9.service.MovieService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

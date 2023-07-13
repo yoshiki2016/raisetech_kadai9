@@ -1,4 +1,4 @@
-package com.example.kadai9;
+package com.example.kadai9.entity;
 
 import java.util.Objects;
 

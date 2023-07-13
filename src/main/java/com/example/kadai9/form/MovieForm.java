@@ -1,4 +1,4 @@
-package com.example.kadai9;
+package com.example.kadai9.form;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;

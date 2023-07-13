@@ -1,4 +1,4 @@
-package com.example.kadai9;
+package com.example.kadai9.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

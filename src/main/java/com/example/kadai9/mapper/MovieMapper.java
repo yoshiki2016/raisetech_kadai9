@@ -1,5 +1,6 @@
-package com.example.kadai9;
+package com.example.kadai9.mapper;
 
+import com.example.kadai9.entity.Movie;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.example.kadai9.integrationtest;
 
-import com.example.kadai9.MovieForm;
+import com.example.kadai9.form.MovieForm;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
