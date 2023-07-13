@@ -1,5 +1,8 @@
-package com.example.kadai9;
+package com.example.kadai9.service;
 
+import com.example.kadai9.entity.Movie;
+import com.example.kadai9.mapper.MovieMapper;
+import com.example.kadai9.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

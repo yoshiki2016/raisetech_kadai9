@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.kadai9.MovieMapper">
-    <select id="findAll" resultType="com.example.kadai9.Movie">
+<mapper namespace="com.example.kadai9.mapper.MovieMapper">
+    <select id="findAll" resultType="com.example.kadai9.entity.Movie">
         SELECT * FROM movies
     </select>
-    <select id="findMovies" parameterType="int" resultType="com.example.kadai9.Movie">
+    <select id="findMovies" parameterType="int" resultType="com.example.kadai9.entity.Movie">
         SELECT * FROM movies WHERE published_year = #{publishedYear}
     </select>
-    <select id="findMovieById" parameterType="int" resultType="com.example.kadai9.Movie">
+    <select id="findMovieById" parameterType="int" resultType="com.example.kadai9.entity.Movie">
         SELECT * FROM movies WHERE id = #{id}
     </select>
-    <insert id="createMovie" parameterType="com.example.kadai9.Movie" useGeneratedKeys="true" keyProperty="id">
+    <insert id="createMovie" parameterType="com.example.kadai9.entity.Movie" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO movies (movie_title, published_year) VALUES (#{movieTitle}, #{publishedYear});
     </insert>
-    <update id="updateMovie" parameterType="com.example.kadai9.Movie">
+    <update id="updateMovie" parameterType="com.example.kadai9.entity.Movie">
         UPDATE movies SET movie_title = #{movieTitle}, published_year = #{publishedYear} Where id = #{id};
     </update>
     <delete id="deleteMovie" parameterType="int">

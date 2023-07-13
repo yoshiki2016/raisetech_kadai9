@@ -1,4 +1,6 @@
-package com.example.kadai9;
+package com.example.kadai9.service;
+
+import com.example.kadai9.entity.Movie;
 
 import java.util.List;
 

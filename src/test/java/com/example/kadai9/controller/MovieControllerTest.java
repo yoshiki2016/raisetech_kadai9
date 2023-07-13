@@ -1,8 +1,13 @@
-package com.example.kadai9;
+package com.example.kadai9.controller;
 
+import com.example.kadai9.entity.Movie;
+import com.example.kadai9.form.MovieForm;
+import com.example.kadai9.service.MovieServiceImpl;
+import com.example.kadai9.exception.ResourceNotFoundException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,7 +200,7 @@ class MovieControllerTest {
     public void 存在しないIDの映画を更新した際にResourceNotFoundExceptionを返すこと() throws Exception {
         int id = 1000; // 存在しないID
         MovieForm movieForm = new MovieForm("鋼の錬金術師 嘆きの丘の聖なる星", 2011);   // 画面からの入力値
-        doThrow(new ResourceNotFoundException("resource not found")).when(movieServiceImpl).updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
+        Mockito.doThrow(new ResourceNotFoundException("resource not found")).when(movieServiceImpl).updateMovie(id, movieForm.getMovieTitle(), movieForm.getPublishedYear());
 
         // JSON形式のデータに変換
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

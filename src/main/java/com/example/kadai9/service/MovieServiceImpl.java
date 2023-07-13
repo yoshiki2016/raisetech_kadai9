@@ -1,5 +1,8 @@
-package com.example.kadai9;
+package com.example.kadai9.service;
 
+import com.example.kadai9.entity.Movie;
+import com.example.kadai9.mapper.MovieMapper;
+import com.example.kadai9.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
